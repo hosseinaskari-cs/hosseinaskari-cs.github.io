@@ -63,8 +63,7 @@ layout: default
     <header class="ha-hero">
       <div class="ha-bio">
         <h1 class="ha-name"><span style="font-weight:700;">{{ site.first_name }}</span> {{ site.last_name }}</h1>
-        <p>Researcher in <strong>machine learning, computer vision, and medical imaging</strong>.</p>
-        <p>PhD in Computer Science, <a href="https://www.uq.edu.au/">The University of Queensland (UQ)</a>, Australia (conferral: 20 November 2026).</p>
+        <p>I am a researcher in <strong>machine learning, computer vision, and medical imaging</strong>. I recently completed my PhD in Computer Science at <a href="https://www.uq.edu.au/">The University of Queensland (UQ)</a>, Australia.</p>
       </div>
       {% if page.profile.image %}<img class="ha-photo" src="{{ page.profile.image | prepend: '/assets/img/' | relative_url }}" alt="Hossein Askari">{% endif %}
     </header>
@@ -146,7 +145,7 @@ news: true
 selected_papers: true
 social: true
 ---
-My research focuses on **robust and generalizable machine learning, generative models, and inverse problems**. I am also interested in foundation models and multimodal learning. My main research interests include:
+My research focuses on **robust and generalizable machine learning** and **generative models for inverse problems**, with applications in image restoration and medical image reconstruction. I am also interested in **foundation models and multimodal learning**.
 """)
     with (OUT/'assets/css/main.scss').open('a', encoding='utf-8') as css:
         css.write("""
