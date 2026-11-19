@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a clean al-folio site from Yadan Luo's public MIT-licensed source.
+"""Prepare a clean al-folio site from public MIT-licensed source.
 Run from repository root: python3 prepare_academic_site.py
 No old website files are copied into the generated site.
 """
