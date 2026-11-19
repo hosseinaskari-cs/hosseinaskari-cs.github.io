@@ -73,12 +73,12 @@ layout: default
     <div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities. Please feel free to <a href="mailto:{{ site.email }}">contact me</a>.</div>
     {% if page.social %}
     <nav class="ha-social" aria-label="Academic and contact links">
-      <a class="ha-scholar" title="Google Scholar" aria-label="Google Scholar" href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><i class="ai ai-google-scholar" aria-hidden="true"></i></a>
-      <a class="ha-github" title="GitHub" aria-label="GitHub" href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i></a>
-      <a class="ha-uq" title="UQ" aria-label="UQ" href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i></a>
-      <a class="ha-email" title="Email" aria-label="Email" href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i></a>
-      <a class="ha-orcid" title="ORCID" aria-label="ORCID" href="https://orcid.org/0000-0002-0838-9183"><i class="ai ai-orcid" aria-hidden="true"></i></a>
-      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a class="ha-cv" title="CV" aria-label="CV" href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i></a>{% endif %}
+      <a class="ha-scholar" href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M12 1 0 10l12 9 12-9z"/><path fill="#356AC3" d="M12 1v18l12-9z"/><circle cx="12" cy="16" r="7" fill="#A0C3FF"/><path fill="#76A7FA" d="M5 16a7 7 0 0 1 14 0z"/></svg> Google Scholar</a>
+      <a class="ha-github" href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+      <a class="ha-uq" href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
+      <a class="ha-email" href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
+      <a class="ha-orcid" href="https://orcid.org/0000-0002-0838-9183"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="12" fill="#A6CE39"/><circle cx="6.4" cy="5.6" r="1.25" fill="white"/><path d="M6.4 8.6v9.2M10.2 8.6h3.3a4.6 4.6 0 1 1 0 9.2h-3.3z" fill="none" stroke="white" stroke-width="1.9"/></svg> ORCID</a>
+      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a class="ha-cv" href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i> CV</a>{% endif %}
     </nav>
     {% endif %}
     <div class="ha-news-selected">
@@ -171,30 +171,24 @@ My research focuses on **robust and generalizable machine learning, generative m
 .ha-home .ha-interest-card li { margin: 0; padding: 0 0 0 8px; position: relative; }
 .ha-home .ha-interest-card li::before { content: "•"; position: absolute; left: 0; font-size: 10px; }
 .ha-home .ha-opportunities { font-size: .95rem; line-height: 1.5; padding: 10px 16px; border-radius: 5px; background: rgba(173,43,161,.075); margin: 0 0 1.4rem; }
-/* Native al-folio icon glyphs, matching the reference's 4rem scale,
-   left alignment and gradient/hover treatment, personalized by brand. */
-.ha-home .ha-social { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 1.8rem; font-size: 4rem; }
-.ha-home .ha-social a { --ha-brand: #52525b; --ha-light: #a1a1aa; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; box-shadow: none; text-decoration: none; color: var(--ha-brand); line-height: 1.2; }
-.ha-home .ha-social a.ha-scholar { --ha-brand: #356AC3; --ha-light: #76A7FA; }
-.ha-home .ha-social a.ha-github { --ha-brand: #24292f; --ha-light: #626a73; }
-.ha-home .ha-social a.ha-uq { --ha-brand: #51247A; --ha-light: #9d78c5; }
-.ha-home .ha-social a.ha-email { --ha-brand: #35618f; --ha-light: #83add6; }
-.ha-home .ha-social a.ha-orcid { --ha-brand: #537a13; --ha-light: #A6CE39; }
-.ha-home .ha-social a i { display: inline-block; font-size: 1em; line-height: 1.2; margin: 0 8px; color: var(--ha-brand); transition: transform 0.3s ease, background-position 0.6s ease; }
-@supports (-webkit-background-clip: text) {
-  .ha-home .ha-social a i { background: linear-gradient(135deg, var(--ha-brand), var(--ha-light)); background-size: 100% 100%; background-position: left center; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-}
-.ha-home .ha-social a:hover { color: var(--ha-brand); text-decoration: none; }
-.ha-home .ha-social a:hover i { background-position: right center; transform: translateY(-2px) scale(1.15); }
-.ha-home .ha-social a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-github { --ha-brand: #e6edf3; --ha-light: #9da7b3; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-scholar { --ha-brand: #76A7FA; --ha-light: #A0C3FF; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-uq { --ha-brand: #ae86d1; --ha-light: #D6B8F0; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-email { --ha-brand: #83add6; --ha-light: #A7CDF4; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-orcid { --ha-brand: #A6CE39; --ha-light: #cce68a; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-cv { --ha-brand: #c4c4ca; --ha-light: #e4e4e7; }
-@media(max-width: 500px) { .ha-home .ha-social { gap: 4px; font-size: 2.75rem; } .ha-home .ha-social a i { margin: 0 6px; } }
-@media(prefers-reduced-motion: reduce) { .ha-home .ha-social a i { transition: none; } .ha-home .ha-social a:hover i { transform: none; } }
+.ha-home .ha-social { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 0 0 1.8rem; }
+.ha-home .ha-social a { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; padding: 5px 13px; border: 1.5px solid var(--global-theme-color,#ad2ba1); border-radius: 30px; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,.17); }
+/* Individual brand colours; preserve the original pill geometry and spacing. */
+.ha-home .ha-social a { --ha-brand: #52525b; color: var(--ha-brand); border-color: var(--ha-brand); background: var(--global-bg-color,#fff); }
+.ha-home .ha-social a.ha-scholar { --ha-brand: #356AC3; }
+.ha-home .ha-social a.ha-github { --ha-brand: var(--global-text-color,#24292f); }
+.ha-home .ha-social a.ha-uq { --ha-brand: #51247A; }
+.ha-home .ha-social a.ha-email { --ha-brand: #35618f; }
+.ha-home .ha-social a.ha-orcid { --ha-brand: #537a13; border-color: #A6CE39; }
+.ha-home .ha-social a.ha-cv { --ha-brand: #52525b; }
+.ha-home .ha-social a .ha-brand-icon { width: 15px; height: 15px; display: block; flex: 0 0 15px; }
+.ha-home .ha-social a i { color: inherit; }
+.ha-home .ha-social a:hover, .ha-home .ha-social a:focus-visible { color: var(--ha-brand); text-decoration: none; background: var(--global-bg-color,#fff); box-shadow: 0 3px 7px rgba(0,0,0,.24); }
+html[data-theme="dark"] .ha-home .ha-social a.ha-scholar { --ha-brand: #A0C3FF; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-uq { --ha-brand: #D6B8F0; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-email { --ha-brand: #A7CDF4; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-orcid { --ha-brand: #A6CE39; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-cv { --ha-brand: #c4c4ca; }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
