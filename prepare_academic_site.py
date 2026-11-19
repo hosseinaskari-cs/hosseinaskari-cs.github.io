@@ -44,6 +44,12 @@ def prepare(src):
         if not (OUT / rel).is_file(): raise RuntimeError('Upstream changed: missing '+rel)
     config = (src/'_config.yml').read_text()
     settings = {'title':'blank','first_name':'Hossein','middle_name':'','last_name':'Askari','email':'h.askari@uq.edu.au','description':'Generative models, Bayesian inference, and computational imaging.','footer_text':'Powered by Jekyll and al-folio.','keywords':'diffusion models, flow matching, inverse problems, computational imaging','icon':'HA','url':'https://hosseinaskari-cs.github.io','baseurl':'','github_username':'hosseinaskari-cs','cv_url':'','linkedin_username':'','scholar_userid':'ZNLvHpoAAAAJ','orcid_id':'0000-0002-0838-9183','google_analytics':'','panelbear_analytics':'','google_site_verification':'','bing_site_verification':'','blog_name':'Research Notes','blog_description':'','enable_google_analytics':'false','enable_panelbear_analytics':'false','enable_google_verification':'false','enable_bing_verification':'false','enable_darkmode':'true','navbar_fixed':'true','footer_fixed':'false','max_width':'1080px','news_limit':'6','enable_masonry':'false','enable_medium_zoom':'false','serve_og_meta':'false','serve_schema_org':'false','disqus_shortname':''}
+    # Do not inherit other people's optional account IDs or contact text.
+    original_social = (src / '_includes/social.html').read_text(encoding='utf-8')
+    for key in re.findall(r'{%-?\s*if site\.([a-zA-Z_][a-zA-Z0-9_]*)\s*-?%}', original_social):
+        settings.setdefault(key, '')
+    settings['contact_note'] = ''
+    settings['rss_icon'] = 'false'
     for k,v in settings.items():
         # Replace complete top-level scalar (including indented block for description/footer).
         pattern = rf'(?m)^{re.escape(k)}:[^\n]*(?:\n[ \t]+[^\n]*)*' if k in ('description','footer_text') else rf'(?m)^{re.escape(k)}:[^\n]*'
@@ -70,22 +76,20 @@ layout: default
     <div class="ha-intro">{{ content }}</div>
     {% include ha-interests.html %}
     <div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities. Please feel free to <a href="mailto:{{ site.email }}">contact me</a>.</div>
-    {% if page.social %}
-    <nav class="ha-social" aria-label="Academic and contact links">
-      <a class="ha-scholar" href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M12 1 0 10l12 9 12-9z"/><path fill="#356AC3" d="M12 1v18l12-9z"/><circle cx="12" cy="16" r="7" fill="#A0C3FF"/><path fill="#76A7FA" d="M5 16a7 7 0 0 1 14 0z"/></svg> Google Scholar</a>
-      <a class="ha-github" href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
-      <a class="ha-uq" href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
-      <a class="ha-email" href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
-      <a class="ha-orcid" href="https://orcid.org/0000-0002-0838-9183"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="12" fill="#A6CE39"/><circle cx="6.4" cy="5.6" r="1.25" fill="white"/><path d="M6.4 8.6v9.2M10.2 8.6h3.3a4.6 4.6 0 1 1 0 9.2h-3.3z" fill="none" stroke="white" stroke-width="1.9"/></svg> ORCID</a>
-      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a class="ha-cv" href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i> CV</a>{% endif %}
-    </nav>
-    {% endif %}
+    <!-- UPSTREAM_SOCIAL_BLOCK -->
     <div class="ha-news-selected">
       {% if page.news %}{% include news.html %}{% endif %}
       {% if page.selected_papers %}{% include selected_papers.html %}{% endif %}
     </div>
   </article>
 </div>""")
+    # Reuse the original social wrapper verbatim, not a hand-built approximation.
+    upstream_about = (src / '_layouts/about.html').read_text(encoding='utf-8')
+    wrapper = re.search(r'{%-?\s*if page\.social\s*-?%}.*?{%-?\s*endif\s*-?%}', upstream_about, flags=re.S)
+    if wrapper is None or 'class="contact-icons"' not in wrapper.group() or '{% include social.html %}' not in wrapper.group():
+        raise RuntimeError('Upstream social wrapper changed; inspect before publishing.')
+    about = (OUT / '_layouts/about.html').read_text(encoding='utf-8')
+    put('_layouts/about.html', about.replace('<!-- UPSTREAM_SOCIAL_BLOCK -->', wrapper.group()))
     put('_includes/ha-interests.html', """<section class="ha-interests" aria-labelledby="ha-interests-title">
 <h2 id="ha-interests-title" class="ha-sr-only">Research Interests</h2>
 <div class="ha-interest-grid">
@@ -125,11 +129,18 @@ layout: default
     default = re.sub(r'\s*<!-- Google tag \(gtag.js\) -->.*?</script>\s*<script>.*?</script>', '',default,flags=re.S)
     if 'G-YB1TEJT0Y8' in default: raise RuntimeError('Cannot remove upstream analytics tag')
     put('_layouts/default.html',default)
-    put('_includes/social.html', '''<a href="mailto:{{ site.email }}" title="Email" aria-label="Email"><i class="fas fa-envelope elegant-icon"></i></a>
-<a href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en" title="Google Scholar" aria-label="Google Scholar"><i class="ai ai-google-scholar elegant-icon"></i></a>
-<a href="https://github.com/hosseinaskari-cs" title="GitHub" aria-label="GitHub"><i class="fab fa-github elegant-icon"></i></a>
-<a href="https://orcid.org/0000-0002-0838-9183" title="ORCID" aria-label="ORCID"><i class="ai ai-orcid"></i></a>
-{% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}" title="CV" aria-label="CV"><i class="fas fa-file-alt elegant-icon"></i></a>{% endif %}''')
+    # Keep upstream social.html, including its original Font Awesome / Academicons classes.
+    social = (src / '_includes/social.html').read_text(encoding='utf-8')
+    cv = re.search(r'<a\b[^>]*href="/assets/pdf/Yadan_latest_Resume_2026v4\.pdf"[^>]*>.*?</a>', social, flags=re.S)
+    if cv is None:
+        raise RuntimeError('Upstream CV markup changed; inspect before publishing.')
+    if (ROOT / 'academic-assets/cv.pdf').is_file():
+        social = social[:cv.start()] + cv.group().replace('/assets/pdf/Yadan_latest_Resume_2026v4.pdf', '/assets/pdf/cv.pdf') + social[cv.end():]
+    else:
+        social = social[:cv.start()] + social[cv.end():]
+    # UQ is an existing personal website link; reuse the same icon font and upstream styling.
+    social += '\n<a href="https://www.uq.edu.au/" title="UQ"><i class="fas fa-university elegant-icon"></i></a>\n'
+    put('_includes/social.html', social)
     put('_includes/footer.html', '''<footer class="{% if site.footer_fixed %}fixed-bottom{% else %}sticky-bottom{% endif %}"><div class="container mt-0">&copy; {{ site.time | date: '%Y' }} Hossein Askari. Powered by <a href="https://github.com/alshedivat/al-folio">al-folio</a>.</div></footer>''')
     put('_pages/about.md', """---
 layout: about
@@ -145,7 +156,7 @@ news: true
 selected_papers: true
 social: true
 ---
-My research focuses on **generative models for inverse problems** and **robust and generalizable machine learning**, with applications in image restoration and medical image reconstruction. I am also interested in **foundation models and multimodal learning**.
+My research focuses on **robust and generalizable machine learning** and **generative models for inverse problems**, with applications in image restoration and medical image reconstruction. I am also interested in **foundation models and multimodal learning**.
 """)
     with (OUT/'assets/css/main.scss').open('a', encoding='utf-8') as css:
         css.write("""
@@ -170,24 +181,6 @@ My research focuses on **generative models for inverse problems** and **robust a
 .ha-home .ha-interest-card li { margin: 0; padding: 0 0 0 8px; position: relative; }
 .ha-home .ha-interest-card li::before { content: "•"; position: absolute; left: 0; font-size: 10px; }
 .ha-home .ha-opportunities { font-size: .95rem; line-height: 1.5; padding: 10px 16px; border-radius: 5px; background: rgba(173,43,161,.075); margin: 0 0 1.4rem; }
-.ha-home .ha-social { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 0 0 1.8rem; }
-.ha-home .ha-social a { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; padding: 5px 13px; border: 1.5px solid var(--global-theme-color,#ad2ba1); border-radius: 30px; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,.17); }
-/* Individual brand colours; preserve the original pill geometry and spacing. */
-.ha-home .ha-social a { --ha-brand: #52525b; color: var(--ha-brand); border-color: var(--ha-brand); background: var(--global-bg-color,#fff); }
-.ha-home .ha-social a.ha-scholar { --ha-brand: #356AC3; }
-.ha-home .ha-social a.ha-github { --ha-brand: var(--global-text-color,#24292f); }
-.ha-home .ha-social a.ha-uq { --ha-brand: #51247A; }
-.ha-home .ha-social a.ha-email { --ha-brand: #35618f; }
-.ha-home .ha-social a.ha-orcid { --ha-brand: #537a13; border-color: #A6CE39; }
-.ha-home .ha-social a.ha-cv { --ha-brand: #52525b; }
-.ha-home .ha-social a .ha-brand-icon { width: 15px; height: 15px; display: block; flex: 0 0 15px; }
-.ha-home .ha-social a i { color: inherit; }
-.ha-home .ha-social a:hover, .ha-home .ha-social a:focus-visible { color: var(--ha-brand); text-decoration: none; background: var(--global-bg-color,#fff); box-shadow: 0 3px 7px rgba(0,0,0,.24); }
-html[data-theme="dark"] .ha-home .ha-social a.ha-scholar { --ha-brand: #A0C3FF; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-uq { --ha-brand: #D6B8F0; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-email { --ha-brand: #A7CDF4; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-orcid { --ha-brand: #A6CE39; }
-html[data-theme="dark"] .ha-home .ha-social a.ha-cv { --ha-brand: #c4c4ca; }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
