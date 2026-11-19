@@ -64,11 +64,55 @@ profile:
   image_circular: true
   address:
 news: true
-selected_papers: true
-social: true
----
-I am a researcher in machine learning and computational imaging at The University of Queensland (UQ), Australia, where I have submitted my revised PhD thesis in Computer Science. My research focuses on **diffusion models, flow matching, Bayesian inference, and inverse problems**.
 
+I am a researcher working in **machine learning, computer vision, and medical imaging**. I received my PhD in Computer Science from The University of Queensland (UQ), Australia.
+
+My research focuses on generalization, robust learning, and inverse problems.
+
+<div style="clear:both; padding-top:15px;">
+
+<h4>Research Interests</h4>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px;">
+
+<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
+  <i class="fas fa-network-wired" style="color:#ad2ba1;"></i>
+  <strong>Out-of-Distribution Generalization</strong>
+  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
+    <li>Domain Adaptation</li>
+    <li>Task Adaptation</li>
+    <li>Domain Generalization</li>
+    <li>Test-Time Adaptation</li>
+  </ul>
+</div>
+
+<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
+  <i class="fas fa-brain" style="color:#ad2ba1;"></i>
+  <strong>In-Distribution Generalization</strong>
+  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
+    <li>Learning with Noisy Labels</li>
+    <li>Robust Learning</li>
+  </ul>
+</div>
+
+<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
+  <i class="fas fa-eye" style="color:#ad2ba1;"></i>
+  <strong>Inverse Problems</strong>
+  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
+    <li>Medical Image Reconstruction</li>
+    <li>Image Restoration</li>
+    <li>Computational Imaging</li>
+  </ul>
+</div>
+
+</div>
+
+<p style="margin-top:15px;">
+My methodological interests include diffusion models,
+flow matching, Bayesian inference, and optimization.
+</p>
+
+</div>
 My goal is to develop mathematically grounded generative inference methods that combine pretrained priors with measurement consistency, enabling reliable image restoration and medical image reconstruction without task-specific retraining.
 
 I am particularly interested in posterior sampling, latent generative models, uncertainty-aware inference, MRI and CT reconstruction, and robust learning under distribution shift. My work has appeared at NeurIPS, WACV, and in the journal *Machine Learning*.
