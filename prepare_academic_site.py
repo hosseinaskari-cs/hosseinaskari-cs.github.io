@@ -156,7 +156,7 @@ news: true
 selected_papers: true
 social: true
 ---
-My recent research focuses on **generative inference under partial and distribution-shifted information**, with applications to inverse problems and domain adaptation. My broader research interests span the following areas:
+My recent research focuses on **generative inference under partial and distribution-shifted information**, with applications to **inverse problems** and **domain adaptation**. My broader research interests span the following areas:
 """)
     with (OUT/'assets/css/main.scss').open('a', encoding='utf-8') as css:
         css.write("""
