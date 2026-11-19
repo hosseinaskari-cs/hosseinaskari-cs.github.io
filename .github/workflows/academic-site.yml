@@ -1,7 +1,7 @@
 name: Publish Hossein academic website
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - 'prepare_academic_site.py'
       - 'academic-assets/**'
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    if: github.ref_name == 'master'
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
