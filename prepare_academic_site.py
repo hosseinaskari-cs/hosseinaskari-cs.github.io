@@ -270,9 +270,13 @@ ML:
     for key,name,sub,color in [('lflow','LFlow','Latent flow matching','#785aa6'),('bgdm','BGDM','Bi-level diffusion guidance','#376c99'),('mapflow','MapFlow','Domain adaptation','#337a73')]:
         put('assets/img/publication_preview/'+key+'.svg',f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 160"><rect width="300" height="160" rx="5" fill="#f5f3f8"/><path d="M20 110 C75 12 120 140 180 60 S250 25 280 46" fill="none" stroke="{color}" stroke-width="3" opacity=".5"/><rect x="16" y="14" width="268" height="64" rx="5" fill="#fff" opacity=".92"/><text x="150" y="41" font-family="sans-serif" font-size="23" font-weight="bold" text-anchor="middle" fill="{color}">{name}</text><text x="150" y="62" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#555">{sub}</text><text x="150" y="148" font-family="sans-serif" font-size="10" text-anchor="middle" fill="#777">Illustrative thumbnail</text></svg>''')
     # Only explicitly supplied assets are imported; no photo or CV from the old repo.
-    if (ROOT/'academic-assets/profile.jpg').is_file():
-        dest=OUT/'assets/img/profile.jpg'; shutil.copy2(ROOT/'academic-assets/profile.jpg',dest)
-        p=OUT/'_pages/about.md'; p.write_text(p.read_text().replace('image: profile.svg','image: profile.jpg'))
+    for filename in ('profile.png', 'profile.jpg', 'profile.jpeg'):
+        photo = ROOT / 'academic-assets' / filename
+        if photo.is_file():
+            shutil.copy2(photo, OUT / 'assets/img' / filename)
+            p = OUT / '_pages/about.md'
+            p.write_text(p.read_text().replace('image: profile.svg', 'image: ' + filename))
+            break
     if (ROOT/'academic-assets/cv.pdf').is_file():
         dest=OUT/'assets/pdf/cv.pdf'; dest.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(ROOT/'academic-assets/cv.pdf',dest)
     for key in ('lflow','bgdm','mapflow'):
