@@ -42,6 +42,7 @@ def prepare(src):
     put('_config.yml',config)
     about = (OUT/'_layouts/about.html').read_text()
     about = re.sub(r'\s*<span class="desc zh-small">.*?</span>', '', about)
+    about = re.sub(r'<script[^>]*id=[\"\']mapmyvisitors[\"\'][^>]*>.*?</script>', '', about, flags=re.S)
     put('_layouts/about.html',about)
     default = (OUT/'_layouts/default.html').read_text()
     default = re.sub(r'\s*<!-- Google tag \(gtag.js\) -->.*?</script>\s*<script>.*?</script>', '',default,flags=re.S)
@@ -57,67 +58,77 @@ def prepare(src):
 layout: about
 title: About
 permalink: /
-subtitle: Researcher in generative AI and computational imaging | <a href="https://www.uq.edu.au/">The University of Queensland</a>
+subtitle: Machine learning, computer vision, and medical imaging
 profile:
   align: right
   image: profile.svg
   image_circular: true
   address:
 news: true
+selected_papers: true
+social: true
+---
+I am a researcher working in **machine learning, computer vision, and medical imaging**. I completed my doctoral research in Computer Science at [The University of Queensland (UQ)](https://www.uq.edu.au/), Australia (PhD conferral: 20 November 2026).
 
-I am a researcher working in **machine learning, computer vision, and medical imaging**. I received my PhD in Computer Science from The University of Queensland (UQ), Australia.
+My research focuses on robust and generalizable machine learning, generative models, and inverse problems. I am also interested in extending these directions to foundation models and multimodal learning.
 
-My research focuses on generalization, robust learning, and inverse problems.
-
-<div style="clear:both; padding-top:15px;">
-
-<h4>Research Interests</h4>
-
-<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px;">
-
-<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
-  <i class="fas fa-network-wired" style="color:#ad2ba1;"></i>
-  <strong>Out-of-Distribution Generalization</strong>
-  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
-    <li>Domain Adaptation</li>
-    <li>Task Adaptation</li>
-    <li>Domain Generalization</li>
-    <li>Test-Time Adaptation</li>
-  </ul>
+<section class="ha-interests" aria-labelledby="ha-interests-title">
+<h2 id="ha-interests-title">Research Interests</h2>
+<div class="ha-interest-grid">
+<div class="ha-interest-card">
+<i class="fas fa-project-diagram ha-interest-icon" aria-hidden="true"></i>
+<div><h3>Out-of-Distribution Generalization</h3>
+<ul><li>Domain adaptation</li><li>Task adaptation</li><li>Domain generalization</li><li>Test-time adaptation</li></ul></div>
 </div>
-
-<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
-  <i class="fas fa-brain" style="color:#ad2ba1;"></i>
-  <strong>In-Distribution Generalization</strong>
-  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
-    <li>Learning with Noisy Labels</li>
-    <li>Robust Learning</li>
-  </ul>
+<div class="ha-interest-card">
+<i class="fas fa-brain ha-interest-icon" aria-hidden="true"></i>
+<div><h3>In-Distribution Generalization</h3>
+<ul><li>Learning with noisy labels</li><li>Robust learning</li><li>Learning with limited supervision</li></ul></div>
 </div>
-
-<div style="border:1px solid #ddd; border-radius:7px; padding:15px;">
-  <i class="fas fa-eye" style="color:#ad2ba1;"></i>
-  <strong>Inverse Problems</strong>
-  <ul style="font-size:0.9em; padding-left:18px; margin:8px 0 0;">
-    <li>Medical Image Reconstruction</li>
-    <li>Image Restoration</li>
-    <li>Computational Imaging</li>
-  </ul>
+<div class="ha-interest-card">
+<i class="fas fa-wave-square ha-interest-icon" aria-hidden="true"></i>
+<div><h3>Inverse Problems</h3>
+<ul><li>Medical image reconstruction</li><li>Image restoration</li><li>Computational imaging</li></ul></div>
 </div>
-
+<div class="ha-interest-card">
+<i class="fas fa-random ha-interest-icon" aria-hidden="true"></i>
+<div><h3>Generative Models</h3>
+<ul><li>Diffusion models</li><li>Flow matching</li><li>Normalizing flows</li><li>Generative inference</li></ul></div>
 </div>
-
-<p style="margin-top:15px;">
-My methodological interests include diffusion models,
-flow matching, Bayesian inference, and optimization.
-</p>
-
+<div class="ha-interest-card">
+<i class="fas fa-layer-group ha-interest-icon" aria-hidden="true"></i>
+<div><h3>Foundation Models &amp; Multimodal Learning</h3>
+<ul><li>Vision-language models (VLMs)</li><li>Foundation model adaptation</li><li>Multimodal representation learning</li><li>Transfer learning</li></ul></div>
 </div>
-My goal is to develop mathematically grounded generative inference methods that combine pretrained priors with measurement consistency, enabling reliable image restoration and medical image reconstruction without task-specific retraining.
+<div class="ha-interest-card">
+<i class="fas fa-chart-line ha-interest-icon" aria-hidden="true"></i>
+<div><h3>Bayesian Inference &amp; Optimization</h3>
+<ul><li>Posterior sampling</li><li>Variational inference</li><li>Uncertainty quantification</li><li>Stochastic optimization</li></ul></div>
+</div>
+</div>
+</section>
 
-I am particularly interested in posterior sampling, latent generative models, uncertainty-aware inference, MRI and CT reconstruction, and robust learning under distribution shift. My work has appeared at NeurIPS, WACV, and in the journal *Machine Learning*.
+<div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities in machine learning, computer vision, and medical imaging. Please feel free to <a href="mailto:h.askari@uq.edu.au">contact me</a>.</div>
+''')
+    # Research cards: appended to the existing al-folio stylesheet.
+    stylesheet = OUT / 'assets/css/main.scss'
+    with stylesheet.open('a', encoding='utf-8') as css:
+        css.write('''
 
-I welcome research collaborations and am interested in postdoctoral and research scientist opportunities in generative AI, computer vision, and computational imaging.''')
+.ha-interests { clear: both; padding-top: 0.75rem; margin: 0 0 1.1rem; }
+.ha-interests h2 { font-size: 1.35rem; font-weight: 500; color: var(--global-theme-color, #ad2ba1); margin: 0 0 0.65rem; }
+.ha-interest-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+.ha-interest-card { display: flex; align-items: flex-start; gap: 0.75rem; border: 1px solid var(--global-divider-color, #dedede); border-radius: 0.45rem; padding: 0.9rem 0.75rem; background: var(--global-bg-color, #fff); }
+.ha-interest-card > div { min-width: 0; }
+.ha-interest-icon { color: var(--global-theme-color, #ad2ba1); font-size: 1.05rem; flex: 0 0 1rem; margin-top: 0.2rem; }
+.ha-interest-card h3 { font-size: 0.92rem; font-weight: 700; line-height: 1.35; margin: 0 0 0.3rem; }
+.ha-interest-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 1.5; }
+.ha-interest-card li { padding-left: 0.65rem; position: relative; }
+.ha-interest-card li::before { content: "•"; position: absolute; left: 0; }
+.ha-opportunities { padding: 0.75rem 0.9rem; border-radius: 0.35rem; background: rgba(173,43,161,0.075); margin: 0 0 1.1rem; }
+@media (max-width: 900px) { .ha-interest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .ha-interest-grid { grid-template-columns: 1fr; } }
+''')
     # Preserve Yadan's actual publication filtering page, with new topical data.
     pubs = (src/'_pages/publications.md').read_text()
     pubs = re.sub(r'(?m)^description:.*$', 'description: Selected research publications, organized by year and topic.',pubs)
@@ -126,18 +137,27 @@ I welcome research collaborations and am interested in postdoctoral and research
 layout: page
 permalink: /research/
 title: Research
-description: Generative inference for inverse problems.
+description: Research interests in machine learning, computer vision, and medical imaging.
 nav: true
 nav_order: 2
 ---
-## Generative models and posterior inference
-Training-free conditional sampling using pretrained diffusion and flow-matching models, including posterior score approximation, measurement guidance, and latent inference.
+## Out-of-Distribution Generalization
+Domain adaptation, task adaptation, domain generalization, and test-time adaptation.
 
-## Computational imaging
-Image restoration and reconstruction from incomplete or noisy measurements, including MRI, CT, deblurring, inpainting and super-resolution.
+## In-Distribution Generalization
+Learning with noisy labels and robust learning, with an emphasis on label-noise robustness.
 
-## Robust machine learning
-Normalizing flows, domain adaptation and learning under distribution shift.
+## Inverse Problems
+Medical image reconstruction (MRI and CT), image restoration, computational imaging, and generative posterior sampling using diffusion models and flow matching.
+
+## Generative Models
+Diffusion models, flow matching, normalizing flows, and generative inference.
+
+## Foundation Models & Multimodal Learning
+Emerging research interests in vision-language models, foundation model adaptation, multimodal representation learning, and transfer learning.
+
+## Bayesian Inference & Optimization
+Posterior sampling, variational inference, uncertainty quantification, and stochastic optimization.
 
 ### Research projects
 
