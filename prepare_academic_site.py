@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Run from repository root: python3 prepare_academic_site.py
+"""Prepare a clean al-folio site from Yadan Luo's public MIT-licensed source.
+Run from repository root: python3 prepare_academic_site.py
 No old website files are copied into the generated site.
 """
 import os, re, shutil, subprocess, tempfile
@@ -197,6 +198,29 @@ My recent research focuses on **generative inference under partial and distribut
 .ha-home .social .contact-icons a,
 .ha-home .social .contact-icons a i,
 .ha-home .social .contact-icons a i::before { font-size: 48px !important; }
+/* Distribute social icons evenly across the full width of the homepage. */
+.ha-home .social { width: 100%; }
+.ha-home .social .contact-icons {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.ha-home .social .contact-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
