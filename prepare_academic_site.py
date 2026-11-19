@@ -3,7 +3,7 @@
 Run from repository root: python3 prepare_academic_site.py
 No old website files are copied into the generated site.
 """
-import re, shutil, subprocess, tempfile
+import os, re, shutil, subprocess, tempfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / '_academic_source'
@@ -19,6 +19,21 @@ def copy(src, rel):
     dest = OUT / rel; dest.parent.mkdir(parents=True, exist_ok=True)
     if p.is_dir(): shutil.copytree(p, dest, dirs_exist_ok=True)
     else: shutil.copy2(p, dest)
+
+def pdf_figure_to_png(source, destination):
+    """Rasterize the first page of a figure PDF, preserving its aspect ratio."""
+    converter = shutil.which('pdftoppm')
+    if not converter and os.environ.get('GITHUB_ACTIONS') == 'true':
+        subprocess.run(['sudo', 'apt-get', 'update'], check=True)
+        subprocess.run(['sudo', 'apt-get', 'install', '-y', 'poppler-utils'], check=True)
+        converter = shutil.which('pdftoppm')
+    if not converter:
+        raise RuntimeError('PDF figures require pdftoppm (poppler-utils); alternatively upload PNG figures.')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([converter, '-f', '1', '-l', '1', '-singlefile', '-cropbox',
+                    '-scale-to', '1400', '-png', str(source), str(destination.with_suffix(''))], check=True)
+    if not destination.is_file() or destination.stat().st_size == 0:
+        raise RuntimeError('Could not render publication figure: ' + str(source))
 
 def prepare(src):
     if OUT.exists(): shutil.rmtree(OUT)
@@ -58,12 +73,12 @@ layout: default
     <div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities. Please feel free to <a href="mailto:{{ site.email }}">contact me</a>.</div>
     {% if page.social %}
     <nav class="ha-social" aria-label="Academic and contact links">
-      <a href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><i class="ai ai-google-scholar" aria-hidden="true"></i> Google Scholar</a>
-      <a href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
-      <a href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
-      <a href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
-      <a href="https://orcid.org/0000-0002-0838-9183"><i class="ai ai-orcid" aria-hidden="true"></i> ORCID</a>
-      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i> CV</a>{% endif %}
+      <a class="ha-scholar" href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M12 1 0 10l12 9 12-9z"/><path fill="#356AC3" d="M12 1v18l12-9z"/><circle cx="12" cy="16" r="7" fill="#A0C3FF"/><path fill="#76A7FA" d="M5 16a7 7 0 0 1 14 0z"/></svg> Google Scholar</a>
+      <a class="ha-github" href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+      <a class="ha-uq" href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
+      <a class="ha-email" href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
+      <a class="ha-orcid" href="https://orcid.org/0000-0002-0838-9183"><svg class="ha-brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="12" fill="#A6CE39"/><circle cx="6.4" cy="5.6" r="1.25" fill="white"/><path d="M6.4 8.6v9.2M10.2 8.6h3.3a4.6 4.6 0 1 1 0 9.2h-3.3z" fill="none" stroke="white" stroke-width="1.9"/></svg> ORCID</a>
+      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a class="ha-cv" href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i> CV</a>{% endif %}
     </nav>
     {% endif %}
     <div class="ha-news-selected">
@@ -158,7 +173,22 @@ My research focuses on **robust and generalizable machine learning, generative m
 .ha-home .ha-opportunities { font-size: .95rem; line-height: 1.5; padding: 10px 16px; border-radius: 5px; background: rgba(173,43,161,.075); margin: 0 0 1.4rem; }
 .ha-home .ha-social { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 0 0 1.8rem; }
 .ha-home .ha-social a { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; padding: 5px 13px; border: 1.5px solid var(--global-theme-color,#ad2ba1); border-radius: 30px; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,.17); }
-.ha-home .ha-social a:hover { background: rgba(173,43,161,.08); }
+/* Individual brand colours; preserve the original pill geometry and spacing. */
+.ha-home .ha-social a { --ha-brand: #52525b; color: var(--ha-brand); border-color: var(--ha-brand); background: var(--global-bg-color,#fff); }
+.ha-home .ha-social a.ha-scholar { --ha-brand: #356AC3; }
+.ha-home .ha-social a.ha-github { --ha-brand: var(--global-text-color,#24292f); }
+.ha-home .ha-social a.ha-uq { --ha-brand: #51247A; }
+.ha-home .ha-social a.ha-email { --ha-brand: #35618f; }
+.ha-home .ha-social a.ha-orcid { --ha-brand: #537a13; border-color: #A6CE39; }
+.ha-home .ha-social a.ha-cv { --ha-brand: #52525b; }
+.ha-home .ha-social a .ha-brand-icon { width: 15px; height: 15px; display: block; flex: 0 0 15px; }
+.ha-home .ha-social a i { color: inherit; }
+.ha-home .ha-social a:hover, .ha-home .ha-social a:focus-visible { color: var(--ha-brand); text-decoration: none; background: var(--global-bg-color,#fff); box-shadow: 0 3px 7px rgba(0,0,0,.24); }
+html[data-theme="dark"] .ha-home .ha-social a.ha-scholar { --ha-brand: #A0C3FF; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-uq { --ha-brand: #D6B8F0; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-email { --ha-brand: #A7CDF4; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-orcid { --ha-brand: #A6CE39; }
+html[data-theme="dark"] .ha-home .ha-social a.ha-cv { --ha-brand: #c4c4ca; }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
@@ -279,11 +309,23 @@ ML:
             break
     if (ROOT/'academic-assets/cv.pdf').is_file():
         dest=OUT/'assets/pdf/cv.pdf'; dest.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(ROOT/'academic-assets/cv.pdf',dest)
-    for key in ('lflow','bgdm','mapflow'):
-        p=ROOT/f'academic-assets/{key}.png'
-        if p.is_file():
-            shutil.copy2(p,OUT/f'assets/img/publication_preview/{key}.png')
-            bib=OUT/'_bibliography/papers.bib'; bib.write_text(bib.read_text().replace(f'preview={{{key}.svg}}',f'preview={{{key}.png}}'))
+    # Publication figures: case-insensitive names, PNG preferred over PDF.
+    # Convert the first page of a PDF to a browser-compatible PNG during the build.
+    assets = ROOT / 'academic-assets'
+    files = sorted((p for p in assets.iterdir() if p.is_file()), key=lambda p: p.name) if assets.is_dir() else []
+    by_name = {p.name.casefold(): p for p in files}
+    for key in ('lflow', 'bgdm', 'mapflow'):
+        p = by_name.get(key + '.png') or by_name.get(key + '.pdf')
+        if p is None:
+            continue  # retain existing illustrative thumbnail
+        dest = OUT / 'assets/img/publication_preview' / (key + '.png')
+        if p.suffix.lower() == '.png':
+            shutil.copy2(p, dest)
+        else:
+            pdf_figure_to_png(p, dest)
+        bib = OUT / '_bibliography/papers.bib'
+        bib.write_text(bib.read_text(encoding='utf-8').replace(f'preview={{{key}.svg}}', f'preview={{{key}.png}}'), encoding='utf-8')
+        print(f'Publication figure: {p.name} -> {dest.name}')
     put('UPSTREAM.txt','Theme source: https://github.com/Luoyadan/luoyadan.github.io (source branch). Original al-folio: https://github.com/alshedivat/al-folio. MIT license; see LICENSE.')
     # Check for legacy identifiers in the retained executable layouts/includes/scripts.
     for folder in ('_includes','_layouts','_plugins','assets/js'):
