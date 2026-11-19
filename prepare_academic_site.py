@@ -40,40 +40,40 @@ def prepare(src):
     # Favicon text uses one emoji, no borrowed logo.
     config = config.replace('icon: HA','icon: "🔬"')
     put('_config.yml',config)
-    about = (OUT/'_layouts/about.html').read_text()
-    about = re.sub(r'\s*<span class="desc zh-small">.*?</span>', '', about)
-    about = re.sub(r'<script[^>]*id=[\"\']mapmyvisitors[\"\'][^>]*>.*?</script>', '', about, flags=re.S)
-    put('_layouts/about.html',about)
-    default = (OUT/'_layouts/default.html').read_text()
-    default = re.sub(r'\s*<!-- Google tag \(gtag.js\) -->.*?</script>\s*<script>.*?</script>', '',default,flags=re.S)
-    if 'G-YB1TEJT0Y8' in default: raise RuntimeError('Cannot remove upstream analytics tag')
-    put('_layouts/default.html',default)
-    put('_includes/social.html', '''<a href="mailto:{{ site.email }}" title="Email" aria-label="Email"><i class="fas fa-envelope elegant-icon"></i></a>
-<a href="https://scholar.google.com/scholar?q=Hossein+Askari+diffusion+flow+matching" title="Search Google Scholar" aria-label="Search Google Scholar"><i class="ai ai-google-scholar elegant-icon"></i></a>
-<a href="https://github.com/hosseinaskari-cs" title="GitHub" aria-label="GitHub"><i class="fab fa-github elegant-icon"></i></a>
-<a href="https://orcid.org/0000-0002-0838-9183" title="ORCID" aria-label="ORCID"><i class="ai ai-orcid"></i></a>
-{% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}" title="CV" aria-label="CV"><i class="fas fa-file-alt elegant-icon"></i></a>{% endif %}''')
-    put('_includes/footer.html', '''<footer class="{% if site.footer_fixed %}fixed-bottom{% else %}sticky-bottom{% endif %}"><div class="container mt-0">&copy; {{ site.time | date: '%Y' }} Hossein Askari. Powered by <a href="https://github.com/alshedivat/al-folio">al-folio</a>.</div></footer>''')
-    put('_pages/about.md', '''---
-layout: about
-title: About
-permalink: /
-subtitle: Machine learning, computer vision, and medical imaging
-profile:
-  align: right
-  image: profile.svg
-  image_circular: true
-  address:
-news: true
-selected_papers: true
-social: true
+    put('_layouts/about.html', """---
+layout: default
 ---
-I am a researcher working in **machine learning, computer vision, and medical imaging**. I completed my doctoral research in Computer Science at [The University of Queensland (UQ)](https://www.uq.edu.au/), Australia (PhD conferral: 20 November 2026).
-
-My research focuses on robust and generalizable machine learning, generative models, and inverse problems. I am also interested in extending these directions to foundation models and multimodal learning.
-
-<section class="ha-interests" aria-labelledby="ha-interests-title">
-<h2 id="ha-interests-title">Research Interests</h2>
+<div class="post ha-home">
+  <article>
+    <header class="ha-hero">
+      <div class="ha-bio">
+        <h1 class="ha-name">{{ site.first_name }} {{ site.last_name }}</h1>
+        <p>Researcher in <strong>machine learning, computer vision, and medical imaging</strong>.</p>
+        <p>PhD in Computer Science, <a href="https://www.uq.edu.au/">The University of Queensland (UQ)</a>, Australia (conferral: 20 November 2026).</p>
+      </div>
+      {% if page.profile.image %}<img class="ha-photo" src="{{ page.profile.image | prepend: '/assets/img/' | relative_url }}" alt="Hossein Askari">{% endif %}
+    </header>
+    <div class="ha-intro">{{ content }}</div>
+    {% include ha-interests.html %}
+    <div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities. Please feel free to <a href="mailto:{{ site.email }}">contact me</a>.</div>
+    {% if page.social %}
+    <nav class="ha-social" aria-label="Academic and contact links">
+      <a href="https://scholar.google.com/scholar?q=Hossein+Askari+diffusion+flow+matching"><i class="ai ai-google-scholar" aria-hidden="true"></i> Google Scholar</a>
+      <a href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+      <a href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
+      <a href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
+      <a href="https://orcid.org/0000-0002-0838-9183"><i class="ai ai-orcid" aria-hidden="true"></i> ORCID</a>
+      {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}"><i class="fas fa-file-alt" aria-hidden="true"></i> CV</a>{% endif %}
+    </nav>
+    {% endif %}
+    <div class="ha-news-selected">
+      {% if page.news %}{% include news.html %}{% endif %}
+      {% if page.selected_papers %}{% include selected_papers.html %}{% endif %}
+    </div>
+  </article>
+</div>""")
+    put('_includes/ha-interests.html', """<section class="ha-interests" aria-labelledby="ha-interests-title">
+<h2 id="ha-interests-title" class="ha-sr-only">Research Interests</h2>
 <div class="ha-interest-grid">
 <div class="ha-interest-card">
 <i class="fas fa-project-diagram ha-interest-icon" aria-hidden="true"></i>
@@ -83,7 +83,7 @@ My research focuses on robust and generalizable machine learning, generative mod
 <div class="ha-interest-card">
 <i class="fas fa-brain ha-interest-icon" aria-hidden="true"></i>
 <div><h3>In-Distribution Generalization</h3>
-<ul><li>Learning with noisy labels</li><li>Robust learning</li><li>Learning with limited supervision</li></ul></div>
+<ul><li>Learning with noisy labels</li><li>Robust learning</li><li>Limited supervision</li></ul></div>
 </div>
 <div class="ha-interest-card">
 <i class="fas fa-wave-square ha-interest-icon" aria-hidden="true"></i>
@@ -98,7 +98,7 @@ My research focuses on robust and generalizable machine learning, generative mod
 <div class="ha-interest-card">
 <i class="fas fa-layer-group ha-interest-icon" aria-hidden="true"></i>
 <div><h3>Foundation Models &amp; Multimodal Learning</h3>
-<ul><li>Vision-language models (VLMs)</li><li>Foundation model adaptation</li><li>Multimodal representation learning</li><li>Transfer learning</li></ul></div>
+<ul><li>Vision-language models (VLMs)</li><li>Foundation model adaptation</li><li>Multimodal learning</li><li>Transfer learning</li></ul></div>
 </div>
 <div class="ha-interest-card">
 <i class="fas fa-chart-line ha-interest-icon" aria-hidden="true"></i>
@@ -106,29 +106,64 @@ My research focuses on robust and generalizable machine learning, generative mod
 <ul><li>Posterior sampling</li><li>Variational inference</li><li>Uncertainty quantification</li><li>Stochastic optimization</li></ul></div>
 </div>
 </div>
-</section>
-
-<div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities in machine learning, computer vision, and medical imaging. Please feel free to <a href="mailto:h.askari@uq.edu.au">contact me</a>.</div>
-''')
-    # Research cards: appended to the existing al-folio stylesheet.
-    stylesheet = OUT / 'assets/css/main.scss'
-    with stylesheet.open('a', encoding='utf-8') as css:
-        css.write('''
-
-.ha-interests { clear: both; padding-top: 0.75rem; margin: 0 0 1.1rem; }
-.ha-interests h2 { font-size: 1.35rem; font-weight: 500; color: var(--global-theme-color, #ad2ba1); margin: 0 0 0.65rem; }
-.ha-interest-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
-.ha-interest-card { display: flex; align-items: flex-start; gap: 0.75rem; border: 1px solid var(--global-divider-color, #dedede); border-radius: 0.45rem; padding: 0.9rem 0.75rem; background: var(--global-bg-color, #fff); }
-.ha-interest-card > div { min-width: 0; }
-.ha-interest-icon { color: var(--global-theme-color, #ad2ba1); font-size: 1.05rem; flex: 0 0 1rem; margin-top: 0.2rem; }
-.ha-interest-card h3 { font-size: 0.92rem; font-weight: 700; line-height: 1.35; margin: 0 0 0.3rem; }
-.ha-interest-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 1.5; }
-.ha-interest-card li { padding-left: 0.65rem; position: relative; }
-.ha-interest-card li::before { content: "•"; position: absolute; left: 0; }
-.ha-opportunities { padding: 0.75rem 0.9rem; border-radius: 0.35rem; background: rgba(173,43,161,0.075); margin: 0 0 1.1rem; }
-@media (max-width: 900px) { .ha-interest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .ha-interest-grid { grid-template-columns: 1fr; } }
-''')
+</section>""")
+    default = (OUT/'_layouts/default.html').read_text()
+    default = re.sub(r'\s*<!-- Google tag \(gtag.js\) -->.*?</script>\s*<script>.*?</script>', '',default,flags=re.S)
+    if 'G-YB1TEJT0Y8' in default: raise RuntimeError('Cannot remove upstream analytics tag')
+    put('_layouts/default.html',default)
+    put('_includes/social.html', '''<a href="mailto:{{ site.email }}" title="Email" aria-label="Email"><i class="fas fa-envelope elegant-icon"></i></a>
+<a href="https://scholar.google.com/scholar?q=Hossein+Askari+diffusion+flow+matching" title="Search Google Scholar" aria-label="Search Google Scholar"><i class="ai ai-google-scholar elegant-icon"></i></a>
+<a href="https://github.com/hosseinaskari-cs" title="GitHub" aria-label="GitHub"><i class="fab fa-github elegant-icon"></i></a>
+<a href="https://orcid.org/0000-0002-0838-9183" title="ORCID" aria-label="ORCID"><i class="ai ai-orcid"></i></a>
+{% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}" title="CV" aria-label="CV"><i class="fas fa-file-alt elegant-icon"></i></a>{% endif %}''')
+    put('_includes/footer.html', '''<footer class="{% if site.footer_fixed %}fixed-bottom{% else %}sticky-bottom{% endif %}"><div class="container mt-0">&copy; {{ site.time | date: '%Y' }} Hossein Askari. Powered by <a href="https://github.com/alshedivat/al-folio">al-folio</a>.</div></footer>''')
+    put('_pages/about.md', """---
+layout: about
+title: About
+permalink: /
+subtitle: Machine learning, computer vision, and medical imaging
+profile:
+  align: right
+  image: profile.svg
+  image_circular: false
+  address:
+news: true
+selected_papers: true
+social: true
+---
+My research focuses on **robust and generalizable machine learning, generative models, and inverse problems**. I am also interested in foundation models and multimodal learning. My main research interests include:
+""")
+    with (OUT/'assets/css/main.scss').open('a', encoding='utf-8') as css:
+        css.write("""
+/* Compact, full-width home layout inspired by the provided reference. */
+.ha-home { max-width: 920px; margin: 0 auto; }
+.ha-home .ha-hero { display: grid; grid-template-columns: minmax(0,1fr) 200px; gap: 30px; align-items: start; margin: 0 0 1.05rem; padding-right: 48px; }
+.ha-home .ha-name { font-size: 2.35rem; font-weight: 300; line-height: 1.15; margin: 0 0 0.9rem; }
+.ha-home .ha-bio p { margin: 0 0 0.65rem; line-height: 1.5; }
+.ha-home .ha-photo { width: 200px; height: 200px; object-fit: cover; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.ha-home .ha-intro { margin: 0 0 0.8rem; }
+.ha-home .ha-intro p { margin: 0; line-height: 1.5; }
+.ha-home .ha-intro strong { color: var(--global-theme-color,#ad2ba1); }
+.ha-home .ha-interests { width: 100%; margin: 0 0 1rem; padding: 0; }
+.ha-home .ha-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.ha-home .ha-interest-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; align-items: stretch; }
+.ha-home .ha-interest-card { box-sizing: border-box; display: grid; grid-template-columns: 26px minmax(0,1fr); column-gap: 12px; align-items: start; padding: 12px 14px 12px 18px; border: 1px solid var(--global-divider-color,#dedede); border-radius: 8px; min-width: 0; background: var(--global-bg-color,#fff); transition: border-color .18s ease; }
+.ha-home .ha-interest-card:hover { border-color: var(--global-theme-color,#ad2ba1); }
+.ha-home .ha-interest-card > div { min-width: 0; }
+.ha-home .ha-interest-card .ha-interest-icon { color: var(--global-theme-color,#ad2ba1); font-size: 17px; margin: 5px 0 0; text-align: center; line-height: 1; }
+.ha-home .ha-interest-card h3 { color: var(--global-text-color,#222); font-size: 14px; font-weight: 700; line-height: 1.22; margin: 0 0 4px; padding: 0; }
+.ha-home .ha-interest-card ul { list-style: none; font-size: 12px; font-weight: 400; line-height: 1.48; margin: 0; padding: 0; }
+.ha-home .ha-interest-card li { margin: 0; padding: 0 0 0 8px; position: relative; }
+.ha-home .ha-interest-card li::before { content: "•"; position: absolute; left: 0; font-size: 10px; }
+.ha-home .ha-opportunities { font-size: .95rem; line-height: 1.5; padding: 10px 16px; border-radius: 5px; background: rgba(173,43,161,.075); margin: 0 0 1.4rem; }
+.ha-home .ha-social { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 0 0 1.8rem; }
+.ha-home .ha-social a { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; padding: 5px 13px; border: 1.5px solid var(--global-theme-color,#ad2ba1); border-radius: 30px; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,.17); }
+.ha-home .ha-social a:hover { background: rgba(173,43,161,.08); }
+.ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
+.ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
+@media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width: 500px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 92px; gap: 12px; } .ha-home .ha-photo { width: 92px; height: 92px; } .ha-home .ha-name { font-size: 1.85rem; } .ha-home .ha-interest-grid { grid-template-columns: 1fr; } }
+""")
     # Preserve Yadan's actual publication filtering page, with new topical data.
     pubs = (src/'_pages/publications.md').read_text()
     pubs = re.sub(r'(?m)^description:.*$', 'description: Selected research publications, organized by year and topic.',pubs)
@@ -231,7 +266,7 @@ ML:
     put('_data/coauthors.yml','{}')
     for date, name, content in [('2025-11-08','lflow','LFlow is published at NeurIPS 2025.'),('2025-02-01','bgdm','BGDM appears at WACV 2025.'),('2023-07-12','mapflow','MapFlow is published in *Machine Learning*.')]:
         put(f'_news/{name}.md',f'---\nlayout: post\ndate: {date}\ninline: true\n---\n{content}')
-    put('assets/img/profile.svg','''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320"><rect width="320" height="320" fill="#eee8f5"/><circle cx="160" cy="160" r="148" fill="#e3d8ee"/><text x="160" y="187" text-anchor="middle" font-family="sans-serif" font-size="85" font-weight="500" fill="#76538f">HA</text></svg>''')
+    put('assets/img/profile.svg','''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320"><rect width="320" height="320" fill="#eee8f5"/><rect x="12" y="12" width="296" height="296" rx="5" fill="#e3d8ee"/><text x="160" y="187" text-anchor="middle" font-family="sans-serif" font-size="85" font-weight="500" fill="#76538f">HA</text></svg>''')
     for key,name,sub,color in [('lflow','LFlow','Latent flow matching','#785aa6'),('bgdm','BGDM','Bi-level diffusion guidance','#376c99'),('mapflow','MapFlow','Domain adaptation','#337a73')]:
         put('assets/img/publication_preview/'+key+'.svg',f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 160"><rect width="300" height="160" rx="5" fill="#f5f3f8"/><path d="M20 110 C75 12 120 140 180 60 S250 25 280 46" fill="none" stroke="{color}" stroke-width="3" opacity=".5"/><rect x="16" y="14" width="268" height="64" rx="5" fill="#fff" opacity=".92"/><text x="150" y="41" font-family="sans-serif" font-size="23" font-weight="bold" text-anchor="middle" fill="{color}">{name}</text><text x="150" y="62" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#555">{sub}</text><text x="150" y="148" font-family="sans-serif" font-size="10" text-anchor="middle" fill="#777">Illustrative thumbnail</text></svg>''')
     # Only explicitly supplied assets are imported; no photo or CV from the old repo.
