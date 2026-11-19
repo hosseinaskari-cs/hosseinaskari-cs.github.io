@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Prepare a clean al-folio site from Yadan Luo's public MIT-licensed source.
 Run from repository root: python3 prepare_academic_site.py
 No old website files are copied into the generated site.
 """
@@ -125,6 +124,12 @@ layout: default
 </div>
 </div>
 </section>""")
+    # Set the size in the original theme too, before Jekyll compiles Sass.
+    base_scss = OUT / '_sass/_base.scss'
+    base_text = base_scss.read_text(encoding='utf-8')
+    base_text, changed = re.subn(r'(\.contact-icons\s*\{\s*font-size:\s*)4rem(\s*;)', r'\g<1>48px\2', base_text, count=1)
+    if changed:
+        base_scss.write_text(base_text, encoding='utf-8')
     default = (OUT/'_layouts/default.html').read_text()
     default = re.sub(r'\s*<!-- Google tag \(gtag.js\) -->.*?</script>\s*<script>.*?</script>', '',default,flags=re.S)
     if 'G-YB1TEJT0Y8' in default: raise RuntimeError('Cannot remove upstream analytics tag')
@@ -190,7 +195,8 @@ My recent research focuses on **generative inference under partial and distribut
 /* Slightly smaller homepage social icons; retain the original theme gradients. */
 .ha-home .social .contact-icons,
 .ha-home .social .contact-icons a,
-.ha-home .social .contact-icons i { font-size: 3rem; }
+.ha-home .social .contact-icons a i,
+.ha-home .social .contact-icons a i::before { font-size: 48px !important; }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
