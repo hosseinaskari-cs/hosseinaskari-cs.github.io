@@ -28,7 +28,7 @@ def prepare(src):
     for rel in ['_layouts/about.html','_layouts/default.html','_includes/social.html','assets/css/main.scss','Gemfile']:
         if not (OUT / rel).is_file(): raise RuntimeError('Upstream changed: missing '+rel)
     config = (src/'_config.yml').read_text()
-    settings = {'title':'blank','first_name':'Hossein','middle_name':'','last_name':'Askari','email':'h.askari@uq.edu.au','description':'Generative models, Bayesian inference, and computational imaging.','footer_text':'Powered by Jekyll and al-folio.','keywords':'diffusion models, flow matching, inverse problems, computational imaging','icon':'HA','url':'https://hosseinaskari-cs.github.io','baseurl':'','github_username':'hosseinaskari-cs','cv_url':'','linkedin_username':'','scholar_userid':'','orcid_id':'0000-0002-0838-9183','google_analytics':'','panelbear_analytics':'','google_site_verification':'','bing_site_verification':'','blog_name':'Research Notes','blog_description':'','enable_google_analytics':'false','enable_panelbear_analytics':'false','enable_google_verification':'false','enable_bing_verification':'false','enable_darkmode':'true','navbar_fixed':'true','footer_fixed':'false','max_width':'1080px','news_limit':'6','enable_masonry':'false','enable_medium_zoom':'false','serve_og_meta':'false','serve_schema_org':'false','disqus_shortname':''}
+    settings = {'title':'blank','first_name':'Hossein','middle_name':'','last_name':'Askari','email':'h.askari@uq.edu.au','description':'Generative models, Bayesian inference, and computational imaging.','footer_text':'Powered by Jekyll and al-folio.','keywords':'diffusion models, flow matching, inverse problems, computational imaging','icon':'HA','url':'https://hosseinaskari-cs.github.io','baseurl':'','github_username':'hosseinaskari-cs','cv_url':'','linkedin_username':'','scholar_userid':'ZNLvHpoAAAAJ','orcid_id':'0000-0002-0838-9183','google_analytics':'','panelbear_analytics':'','google_site_verification':'','bing_site_verification':'','blog_name':'Research Notes','blog_description':'','enable_google_analytics':'false','enable_panelbear_analytics':'false','enable_google_verification':'false','enable_bing_verification':'false','enable_darkmode':'true','navbar_fixed':'true','footer_fixed':'false','max_width':'1080px','news_limit':'6','enable_masonry':'false','enable_medium_zoom':'false','serve_og_meta':'false','serve_schema_org':'false','disqus_shortname':''}
     for k,v in settings.items():
         # Replace complete top-level scalar (including indented block for description/footer).
         pattern = rf'(?m)^{re.escape(k)}:[^\n]*(?:\n[ \t]+[^\n]*)*' if k in ('description','footer_text') else rf'(?m)^{re.escape(k)}:[^\n]*'
@@ -58,7 +58,7 @@ layout: default
     <div class="ha-opportunities">I welcome research collaborations and am interested in postdoctoral and research scientist opportunities. Please feel free to <a href="mailto:{{ site.email }}">contact me</a>.</div>
     {% if page.social %}
     <nav class="ha-social" aria-label="Academic and contact links">
-      <a href="https://scholar.google.com/scholar?q=Hossein+Askari+diffusion+flow+matching"><i class="ai ai-google-scholar" aria-hidden="true"></i> Google Scholar</a>
+      <a href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en"><i class="ai ai-google-scholar" aria-hidden="true"></i> Google Scholar</a>
       <a href="https://github.com/hosseinaskari-cs"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
       <a href="https://www.uq.edu.au/"><i class="fas fa-university" aria-hidden="true"></i> UQ</a>
       <a href="mailto:{{ site.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
@@ -112,7 +112,7 @@ layout: default
     if 'G-YB1TEJT0Y8' in default: raise RuntimeError('Cannot remove upstream analytics tag')
     put('_layouts/default.html',default)
     put('_includes/social.html', '''<a href="mailto:{{ site.email }}" title="Email" aria-label="Email"><i class="fas fa-envelope elegant-icon"></i></a>
-<a href="https://scholar.google.com/scholar?q=Hossein+Askari+diffusion+flow+matching" title="Search Google Scholar" aria-label="Search Google Scholar"><i class="ai ai-google-scholar elegant-icon"></i></a>
+<a href="https://scholar.google.com/citations?user=ZNLvHpoAAAAJ&amp;hl=en" title="Google Scholar" aria-label="Google Scholar"><i class="ai ai-google-scholar elegant-icon"></i></a>
 <a href="https://github.com/hosseinaskari-cs" title="GitHub" aria-label="GitHub"><i class="fab fa-github elegant-icon"></i></a>
 <a href="https://orcid.org/0000-0002-0838-9183" title="ORCID" aria-label="ORCID"><i class="ai ai-orcid"></i></a>
 {% assign cv = site.static_files | where: "path", "/assets/pdf/cv.pdf" | first %}{% if cv %}<a href="{{ '/assets/pdf/cv.pdf' | relative_url }}" title="CV" aria-label="CV"><i class="fas fa-file-alt elegant-icon"></i></a>{% endif %}''')
