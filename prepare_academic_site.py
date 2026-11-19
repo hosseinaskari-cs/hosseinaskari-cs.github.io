@@ -145,7 +145,7 @@ news: true
 selected_papers: true
 social: true
 ---
-My research focuses on **robust and generalizable machine learning** and **generative models for inverse problems**, with applications in image restoration and medical image reconstruction. I am also interested in **foundation models and multimodal learning**.
+My research focuses on **generative models for inverse problems** and **robust and generalizable machine learning**, with applications in image restoration and medical image reconstruction. I am also interested in **foundation models and multimodal learning**.
 """)
     with (OUT/'assets/css/main.scss').open('a', encoding='utf-8') as css:
         css.write("""
