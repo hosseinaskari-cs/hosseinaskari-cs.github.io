@@ -196,43 +196,12 @@ My recent research focuses on **generative inference under partial and distribut
     pubs = (src/'_pages/publications.md').read_text()
     pubs = re.sub(r'(?m)^description:.*$', 'description: Selected research publications, organized by year and topic.',pubs)
     put('_pages/publications.md',pubs)
-    put('_pages/research.md', '''---
-layout: page
-permalink: /research/
-title: Research
-description: Research interests in machine learning, computer vision, and medical imaging.
-nav: true
-nav_order: 2
----
-## Out-of-Distribution Generalization
-Domain adaptation, task adaptation, domain generalization, and test-time adaptation.
-
-## In-Distribution Generalization
-Learning with noisy labels and robust learning, with an emphasis on label-noise robustness.
-
-## Inverse Problems
-Medical image reconstruction (MRI and CT), image restoration, computational imaging, and generative posterior sampling using diffusion models and flow matching.
-
-## Generative Models
-Diffusion models, flow matching, normalizing flows, and generative inference.
-
-## Foundation Models & Multimodal Learning
-Emerging research interests in vision-language models, foundation model adaptation, multimodal representation learning, and transfer learning.
-
-## Bayesian Inference & Optimization
-Posterior sampling, variational inference, uncertainty quantification, and stochastic optimization.
-
-### Research projects
-
-- **[LFlow](https://github.com/hosseinaskari-cs/LFlow)** — latent flow-matching inference for linear inverse problems (NeurIPS 2025).
-- **[BGDM](https://github.com/hosseinaskari-cs/BGDM)** — bi-level diffusion guidance for MRI and CT reconstruction (WACV 2025).
-- **[MapFlow](https://doi.org/10.1007/s10994-023-06357-2)** — latent transitions for unsupervised domain adaptation (*Machine Learning*, 2023).''')
     put('_pages/services.md', '''---
 layout: page
 permalink: /services/
 title: Services
 nav: true
-nav_order: 3
+nav_order: 2
 ---
 
 <div class="ha-services" markdown="1">
@@ -241,6 +210,22 @@ nav_order: 3
 
 - Conference on Neural Information Processing Systems (NeurIPS)
 - IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
+
+</div>
+''')
+    put('_pages/awards.md', '''---
+layout: page
+permalink: /awards/
+title: "Awards & Honors"
+nav: true
+nav_order: 3
+---
+
+<div class="ha-services" markdown="1">
+
+- **2025** — Scholar Award, Conference on Neural Information Processing Systems (NeurIPS).
+- **2022** — Research Training Program (RTP) Scholarship, The University of Queensland.
+- **2019** — Adelaide International Scholarship, The University of Adelaide.
 
 </div>
 ''')
