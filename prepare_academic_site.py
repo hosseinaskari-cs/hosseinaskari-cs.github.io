@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-Run from repository root: python3 prepare_academic_site.py
+"""Run from repository root: python3 prepare_academic_site.py
 No old website files are copied into the generated site.
 """
 import os, re, shutil, subprocess, tempfile
