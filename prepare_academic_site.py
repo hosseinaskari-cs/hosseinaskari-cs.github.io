@@ -181,6 +181,12 @@ My recent research focuses on **generative inference under partial and distribut
 .ha-home .ha-interest-card li { margin: 0; padding: 0 0 0 8px; position: relative; }
 .ha-home .ha-interest-card li::before { content: "•"; position: absolute; left: 0; font-size: 10px; }
 .ha-home .ha-opportunities { font-size: .95rem; line-height: 1.5; padding: 10px 16px; border-radius: 5px; background: rgba(173,43,161,.075); margin: 0 0 1.4rem; }
+/* Academic services page; use the existing theme accent. */
+.ha-services h3 { font-size: 1.15rem; font-weight: 700; margin: 1.4rem 0 .8rem; }
+.ha-services h3::after { content: ""; display: block; width: 65px; height: 2px; margin-top: 7px; background: linear-gradient(90deg, var(--global-theme-color,#ad2ba1), transparent); }
+.ha-services ul { padding-left: 1.25rem; }
+.ha-services li { margin-bottom: .6rem; }
+.ha-services li::marker { color: var(--global-theme-color,#ad2ba1); }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
@@ -221,12 +227,29 @@ Posterior sampling, variational inference, uncertainty quantification, and stoch
 - **[LFlow](https://github.com/hosseinaskari-cs/LFlow)** — latent flow-matching inference for linear inverse problems (NeurIPS 2025).
 - **[BGDM](https://github.com/hosseinaskari-cs/BGDM)** — bi-level diffusion guidance for MRI and CT reconstruction (WACV 2025).
 - **[MapFlow](https://doi.org/10.1007/s10994-023-06357-2)** — latent transitions for unsupervised domain adaptation (*Machine Learning*, 2023).''')
+    put('_pages/services.md', '''---
+layout: page
+permalink: /services/
+title: Services
+nav: true
+nav_order: 3
+---
+
+<div class="ha-services" markdown="1">
+
+### Conference Reviewer
+
+- Conference on Neural Information Processing Systems (NeurIPS)
+- IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
+
+</div>
+''')
     put('_pages/contact.md', '''---
 layout: page
 permalink: /contact/
 title: Contact
 nav: true
-nav_order: 3
+nav_order: 4
 ---
 I welcome enquiries about research collaborations and research career opportunities.
 
