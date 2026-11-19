@@ -187,6 +187,10 @@ My recent research focuses on **generative inference under partial and distribut
 .ha-services ul { padding-left: 1.25rem; }
 .ha-services li { margin-bottom: .6rem; }
 .ha-services li::marker { color: var(--global-theme-color,#ad2ba1); }
+/* Slightly smaller homepage social icons; retain the original theme gradients. */
+.ha-home .social .contact-icons,
+.ha-home .social .contact-icons a,
+.ha-home .social .contact-icons i { font-size: 3rem; }
 .ha-home .ha-news-selected { border-top: 1px solid var(--global-divider-color,#eee); padding-top: .8rem; }
 .ha-home .ha-news-selected .news h2 { color: var(--global-theme-color,#ad2ba1); font-size: 1.2rem; font-weight: 700; }
 @media(max-width: 767px) { .ha-home .ha-hero { grid-template-columns: minmax(0,1fr) 140px; gap: 16px; padding-right: 0; } .ha-home .ha-photo { width: 140px; height: 140px; } .ha-home .ha-interest-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
